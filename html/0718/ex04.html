@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>할일목록</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+</head>
+<body>
+    <div id="todos" style="width: 600px;margin: 0 auto;"></div>
+    <script id="temp_todos" type="text/x-handlebars-template">
+        <table>
+            {{#each .}}
+                <h5>{{id}}:{{title}}</h5>
+            {{/each}}
+        </table>  
+    </script>
+</body>
+<script>
+    getTodos();
+    function getTodos(){
+        $.ajax({
+            type:"get",
+            url:"https://jsonplaceholder.typicode.com/posts",
+            dateType:"json",
+            success:function(data){
+                const rows=data.filter(post=>post.id<=5);
+                let compile_temp=Handlebars.compile($("#temp_todos").html());
+                let html=compile_temp(rows);
+                $("#todos").html(html);
+            }
+        });
+    }
+</script>
+</html>
