@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Jquery -->
-        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-        <!-- Handlebars -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-        <!-- Bootstrap Javascript -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-        <title>상품관리</title>
-        <link rel="stylesheet" href="style.css"/>
-        <style>
-            #div_product tr .name{
-                color: green;
-            }
-        </style>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Jquery -->
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <!-- Handlebars -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- Bootstrap Javascript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <title>상품관리</title>
+    <link rel="stylesheet" href="style.css"/>
+    <style>
+        #div_product tr .name{
+            color: green;
+        }
+    </style>
+</head>
 <body>
     <div class="row my-5 justify-content-center">
         <div class="col-md-6 px-5">
@@ -30,6 +30,12 @@
         <div class="col-md-7 px-5">
             <h1 class="text-center">매출목록</h1>
             <div id="div_sales"></div>
+        </div>
+    </div>
+    <div class="row my-5">
+        <div class="col-md-7">
+            <h1 class="text_center">캠핑장목록</h1>
+            <div id="div_camping"></div>
         </div>
     </div>
     <!-- 상품목록 템플릿 -->
@@ -75,8 +81,28 @@
                 <td>{{scnt}}</td>
                 <td>{{price}}</td>
                 <td>{{sdate}}</td>
-                <td><button class="view btn btn-danger">조회</button></td>
+                <td><button class="view btn btn-danger" index="{{@index}}">조회</button></td>
             </tr>
+            <!-- Modal(상품조회 모달 창) -->
+            <div class="modal fade" id="modal_sales{{@index}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h3>{{scode}} : {{pcode}} : {{scnt}} : {{price}} : {{sdate}}</h3>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Understood</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Modal(상품조회 모달 창) -->
             {{/each}}
         </table>
     </script>
@@ -95,11 +121,11 @@
     const html_product = temp_product(products);
     $("#div_product").html(html_product);
 
-        // 조회버튼을 눌렀을때
-        $("#div_product").on("click", "tr td .view", function(){
-            const index = $(this).attr("index");
-            $("#modal_product"+index).modal('show');
-        });
+    // 상품목록 조회버튼을 눌렀을때
+    $("#div_product").on("click", "tr td .view", function(){
+        const index = $(this).attr("index");
+        $("#modal_product"+index).modal('show');
+    });
 
     // 매출목록
     const sales = [
@@ -110,5 +136,11 @@
     const temp_sales = Handlebars.compile($("#temp_sales").html());
     const html_sales = temp_sales(sales);
     $("#div_sales").html(html_sales);
+
+    // 매출목록 조회버튼을 눌렀을때
+    $("#div_sales").on("click", ".view", function(){
+        const index = $(this).attr("index");
+        $("#modal_sales"+index).modal('show');
+    });
 </script>
 </html>
